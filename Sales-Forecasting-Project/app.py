@@ -1,43 +1,22 @@
-
-#df = pd.read_csv(
-  #  "/Users/bhavyasri/Desktop/Sales-Forecasting-Project/dataset/Sample - Superstore.csv",
- #   encoding='latin1'
-#)
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
 from sklearn.linear_model import LinearRegression
-
-# ---------------------------------------------------
-# PAGE TITLE
-# ---------------------------------------------------
-
 st.set_page_config(
     page_title="Sales Forecast Dashboard",
     layout="wide"
 )
 
 st.title("📈 Sales Forecast Dashboard")
-
-# ---------------------------------------------------
 # LOAD DATA
-# ---------------------------------------------------
-
-
 df = pd.read_csv(
     "/Users/bhavyasri/Desktop/Sales-Forecasting-Project/dataset/Sample - Superstore.csv",
     encoding='latin1'
 )
 # Convert date column
 df['Order Date'] = pd.to_datetime(df['Order Date'])
-
-# ---------------------------------------------------
 # FILTERS
-# ---------------------------------------------------
-
 st.sidebar.header("Filters")
 
 region = st.sidebar.selectbox(
@@ -63,10 +42,7 @@ if category != 'All':
         filtered_df['Category'] == category
     ]
 
-# ---------------------------------------------------
 # KPI SECTION
-# ---------------------------------------------------
-
 total_sales = filtered_df['Sales'].sum()
 avg_sales = filtered_df['Sales'].mean()
 max_sales = filtered_df['Sales'].max()
@@ -93,10 +69,7 @@ col4.metric(
     "Total Orders",
     total_orders
 )
-
-# ---------------------------------------------------
 # SALES TREND
-# ---------------------------------------------------
 
 st.subheader("📊 Historical Sales Trend")
 
@@ -117,9 +90,7 @@ ax1.set_title("Sales Trend Over Time")
 
 st.pyplot(fig1)
 
-# ---------------------------------------------------
 # MACHINE LEARNING FORECAST
-# ---------------------------------------------------
 
 sales_data['Day_Number'] = np.arange(
     len(sales_data)
@@ -144,10 +115,7 @@ future_predictions = model.predict(
     future_days
 )
 
-# ---------------------------------------------------
 # FORECAST GRAPH
-# ---------------------------------------------------
-
 st.subheader("🔮 30-Day Sales Forecast")
 
 fig2, ax2 = plt.subplots(figsize=(12,5))
@@ -174,11 +142,7 @@ ax2.set_ylabel("Sales")
 ax2.legend()
 
 st.pyplot(fig2)
-
-# ---------------------------------------------------
 # FORECAST SUMMARY
-# ---------------------------------------------------
-
 st.subheader("📌 Forecast Summary")
 
 future_total = future_predictions.sum()
@@ -187,11 +151,7 @@ st.write(
     f"### Predicted Total Sales for Next 30 Days: "
     f"${future_total:,.0f}"
 )
-
-# ---------------------------------------------------
 # SHOW FILTERED DATA
-# ---------------------------------------------------
-
 st.subheader("📂 Filtered Dataset")
 
 st.dataframe(filtered_df.head(20))
